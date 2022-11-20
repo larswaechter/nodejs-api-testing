@@ -1,0 +1,18 @@
+version: "3.1"
+
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: nodejs_db
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./db/scripts/create-tables.sql:/docker-entrypoint-initdb.d/1.sql
+      - ./db/scripts/create-testdb.sql:/docker-entrypoint-initdb.d/2.sql
+volumes:
+  db-data:
