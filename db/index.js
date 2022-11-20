@@ -5,23 +5,24 @@ const { Client } = require("pg");
 require("dotenv").config();
 
 // Read SQL seed query
-const seedQuery = readFileSync(join(__dirname, "scripts/create-tables.sql"), {
+const seedQuery = readFileSync(join(__dirname, "scripts/seed.sql"), {
   encoding: "utf-8",
 });
 
-const client = new Client({
-  user: "postgres",
-  host: "localhost",
-  database: "postgres",
-  password: "mypassword",
-  port: 5432,
-});
+// Config is read from .env file
+const client = new Client();
 
-client.connect();
-
-console.log("Running SQL seed...");
-client.query(seedQuery, (err) => {
-  if (err) throw err;
-  console.log("SQL seed completed successfully!");
-  client.end();
-});
+console.log("Connecting to db...");
+client
+  .connect()
+  .then(() => {
+    console.log("Running SQL seed...");
+    client.query(seedQuery, ["john@doe.com", "johndoe"], (err) => {
+      if (err) throw err;
+      console.log("Seed completed successfully!");
+      client.end();
+    });
+  })
+  .catch((err) => {
+    throw err;
+  });

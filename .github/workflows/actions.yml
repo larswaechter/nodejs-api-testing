@@ -57,5 +57,11 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+      - name: Run Linter
+        run: npm run lint
+      - name: Run Prettier
+        run: npm run prettier:ci
+      - name: Build
+        run: npm run build
       - name: Tests
         run: npm run test:ci
