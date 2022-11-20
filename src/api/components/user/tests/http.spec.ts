@@ -81,6 +81,19 @@ describe('User component (HTTP)', () => {
 			});
 	});
 
+	it('POST /users', (done) => {
+		factory.app
+			.post('/users')
+			.send(dummyUser)
+			.expect(400)
+			.then(() => {
+				done();
+			})
+			.catch((err) => {
+				done(err);
+			});
+	});
+
 	it('GET /users', (done) => {
 		factory.app
 			.get('/users')

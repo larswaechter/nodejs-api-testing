@@ -25,6 +25,7 @@ export class Server {
 	}
 
 	private registerRoutes() {
+		this._app.get('/', (req: Request, res: Response) => res.send('Hello World!'));
 		this._app.use('/users', new UserRoutes(this.client).router);
 	}
 

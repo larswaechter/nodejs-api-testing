@@ -1,9 +1,18 @@
-version: "3.1"
+version: '3'
 
 services:
-  db:
+  app:
+    build: .
+    container_name: nodejs-api-testing-app
+    ports:
+      - 3001:3000
+    depends_on:
+      - postgres
+    links:
+      - postgres
+  postgres:
     image: postgres
-    restart: always
+    container_name: nodejs-api-testing-db
     ports:
       - 5432:5432
     environment:

@@ -65,6 +65,22 @@ describe('User component (REPO)', () => {
 			expect(user.username).eq(dummyUser.username);
 		}));
 
+	it('readByEmailOrUsername', () =>
+		repo.readByEmailOrUsername('john@doe.com', '').then((user) => {
+			expect(user).to.be.an('object');
+			expect(user.id).eq(1);
+			expect(user.email).eq(dummyUser.email);
+			expect(user.username).eq(dummyUser.username);
+		}));
+
+	it('readByEmailOrUsername', () =>
+		repo.readByEmailOrUsername('', 'johndoe').then((user) => {
+			expect(user).to.be.an('object');
+			expect(user.id).eq(1);
+			expect(user.email).eq(dummyUser.email);
+			expect(user.username).eq(dummyUser.username);
+		}));
+
 	it('delete', () =>
 		repo.delete(1).then((res) => {
 			expect(res).to.be.true;

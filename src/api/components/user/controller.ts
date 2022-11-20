@@ -43,6 +43,9 @@ export class UserController {
 			const dto = UserDTO.fromRequest(req);
 			if (dto === undefined || !dto.isValid()) return res.sendStatus(400);
 
+			const existingUser = await this.repo.readByEmailOrUsername(dto.email, dto.username);
+			if (existingUser !== undefined) return res.sendStatus(400);
+
 			const user = await this.repo.create(dto);
 
 			return res.status(201).json(user);
