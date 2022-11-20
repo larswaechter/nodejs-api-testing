@@ -20,13 +20,15 @@ jobs:
         env:
           POSTGRES_USER: root
           POSTGRES_PASSWORD: mypassword
-          POSTGRES_DB: nodejs_db
+          POSTGRES_DB: nodejs_test
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          - 5432:5432
 
     steps:
       - name: Checkout Code
@@ -44,7 +46,7 @@ jobs:
       - name: Create env file
         run: |
           touch .env
-          echo PGHOST=postgres >> ./.env
+          echo PGHOST=localhost >> ./.env
           echo PGUSER=root >> ./.env
           echo PGPASSWORD=mypassword >> ./.env
           echo PGDATABASE=nodejs_test >> ./.env
@@ -56,4 +58,4 @@ jobs:
       - name: Build
         run: npm run build
       - name: Tests
-        run: npm test
+        run: npm run test:ci
