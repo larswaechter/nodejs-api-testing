@@ -8,12 +8,14 @@ describe('User component (HTTP)', () => {
 
 	const dummyUser = new UserDTO('john@doe.com', 'johndoe');
 
+	// Connect to DB && start Express Server
 	beforeAll((done) => {
 		factory.prepare((err?: Error) => {
 			done(err);
 		});
 	});
 
+	// Disconnect from DB && stop Express Server
 	afterAll((done) => {
 		factory.close(done);
 	});

@@ -19,7 +19,6 @@ export class UserDTO {
 
 	static fromRequest(req: Request) {
 		if (!UtilityService.hasProperties(req, ['email', 'username'])) return undefined;
-
 		return new UserDTO(req.body.email, req.body.username);
 	}
 

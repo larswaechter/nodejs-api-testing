@@ -12,7 +12,7 @@ RUN npm i \
     && npm run build
 
 # Env
-RUN mv -f docker.env .env
+RUN mv docker.env .env
 
 # Cleanup
 RUN rm -rf src

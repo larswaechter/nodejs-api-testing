@@ -12,15 +12,15 @@ export interface ITestFactory {
 }
 
 export abstract class AbsTestFactory implements ITestFactory {
-	readonly dbClient: Client;
+	readonly dbClient: Client = new Client();
 
 	private seed = readFileSync(join(__dirname, '../../db/scripts/create-tables.sql'), {
 		encoding: 'utf-8'
 	});
 
 	constructor() {
+		// Overwrite .env file entry
 		process.env.PGDATABASE = 'nodejs_test';
-		this.dbClient = new Client();
 	}
 
 	abstract close(cb: (err?: Error) => void): void;

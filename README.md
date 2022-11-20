@@ -23,6 +23,8 @@ Enter the following command to run the docker images:
 docker-compose up
 ```
 
+The app is available at [http://localhost:3001](http://localhost:3001).
+
 ### Native
 
 Enter the following commands to start the app:
@@ -35,6 +37,12 @@ mv example.env .env	# Enter credentials here
 npm run watch
 ```
 
+The app is available at [http://localhost:3000](http://localhost:3000).
+
 ## Testing
 
-...
+Make sure you have a Postgres instance running before running the tests.
+
+```bash
+npm test
+```

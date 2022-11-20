@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 
 import { RepoTestFactory } from '../../../../test/repo.factory';
-import { UserDTO } from '../dto';
 import { UserRepository } from '../repository';
+import { UserDTO } from '../dto';
 
 describe('User component (REPO)', () => {
 	const factory: RepoTestFactory = new RepoTestFactory();
@@ -10,6 +10,7 @@ describe('User component (REPO)', () => {
 
 	const dummyUser = new UserDTO('john@doe.com', 'johndoe');
 
+	// Connect to DB
 	beforeAll((done) => {
 		factory.prepare((err?: Error) => {
 			repo = new UserRepository(factory.dbClient);
@@ -17,6 +18,7 @@ describe('User component (REPO)', () => {
 		});
 	});
 
+	// Disconnect from DB
 	afterAll((done) => {
 		factory.close(done);
 	});
