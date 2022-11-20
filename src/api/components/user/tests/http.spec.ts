@@ -2,7 +2,6 @@ import { expect } from 'chai';
 
 import { HttpTestFactory } from '../../../../test/http.factory';
 import { IUser, UserDTO } from '../dto';
-import { UserRepository } from '../repository';
 
 describe('User component (HTTP)', () => {
 	const factory: HttpTestFactory = new HttpTestFactory();
@@ -11,7 +10,6 @@ describe('User component (HTTP)', () => {
 
 	beforeAll((done) => {
 		factory.prepare((err?: Error) => {
-			repo = new UserRepository(factory.dbClient);
 			done(err);
 		});
 	});
