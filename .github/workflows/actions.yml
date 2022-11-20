@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  backend:
+  app:
     runs-on: ubuntu-18.04
 
     # Service containers to run with `container-job`
@@ -44,7 +44,7 @@ jobs:
       - name: Create env file
         run: |
           touch .env
-          echo PGHOST=localhost >> ./.env
+          echo PGHOST=postgres >> ./.env
           echo PGUSER=root >> ./.env
           echo PGPASSWORD=mypassword >> ./.env
           echo PGDATABASE=nodejs_test >> ./.env
