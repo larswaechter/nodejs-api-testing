@@ -5,14 +5,8 @@ import { Server } from '../api/server';
 import { AbsTestFactory } from './abs.factory';
 
 export class MockTestFactory extends AbsTestFactory {
-	private readonly server: Server;
-	private readonly http: HttpServer;
-
-	constructor() {
-		super();
-		this.server = new Server();
-		this.http = createServer(this.server.app);
-	}
+	private readonly server: Server = new Server();
+	private readonly http: HttpServer = createServer(this.server.app);
 
 	get app() {
 		return supertest(this.server.app);
