@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { Request } from 'express';
 import { UserDTO } from '../dto';
 
-describe('Document component (DTO)', () => {
+describe('User component (DTO)', () => {
 	const user = new UserDTO('john@doe.com', 'johndoe');
 
 	it('UserDTO.isValid()', () => {

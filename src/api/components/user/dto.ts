@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { UtilityService } from '../../services/utility';
+import { UtilityService } from '../../../services/utility';
 
 export interface IUser {
 	id: number;

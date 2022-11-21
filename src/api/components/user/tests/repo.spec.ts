@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { RepoTestFactory } from '../../../../test/repo.factory';
+import { RepoTestFactory } from '../../../../factories/repo.factory';
 import { UserRepository } from '../repository';
 import { UserDTO } from '../dto';
 

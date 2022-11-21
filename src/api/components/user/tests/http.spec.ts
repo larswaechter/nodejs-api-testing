@@ -1,11 +1,10 @@
 import { expect } from 'chai';
 
-import { HttpTestFactory } from '../../../../test/http.factory';
+import { HttpTestFactory } from '../../../../factories/http.factory';
 import { IUser, UserDTO } from '../dto';
 
 describe('User component (HTTP)', () => {
 	const factory: HttpTestFactory = new HttpTestFactory();
-
 	const dummyUser = new UserDTO('john@doe.com', 'johndoe');
 
 	// Connect to DB && start Express Server
