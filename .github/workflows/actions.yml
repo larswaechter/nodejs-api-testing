@@ -64,4 +64,4 @@ jobs:
       - name: Build
         run: npm run build
       - name: Tests
-        run: npm run test:ci
+        run: npm run test:db

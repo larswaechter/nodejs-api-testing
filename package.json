@@ -12,8 +12,9 @@
 		"prettier": "prettier --config ./.prettierrc --write './src/**/*.ts'",
 		"prettier:ci": "prettier --config ./.prettierrc --check './src/**/*.ts'",
 		"lint": "eslint . --ext .ts",
-		"test": "NODE_ENV=test jest --coverage",
-		"test:ci": "NODE_ENV=test jest"
+		"test": "npm run test:db -- --coverage",
+		"test:mock": "NODE_ENV=test jest --testPathIgnorePatterns repo.spec.ts",
+		"test:db": "NODE_ENV=test jest --testPathIgnorePatterns mock.spec.ts"
 	},
 	"repository": {
 		"type": "git",
