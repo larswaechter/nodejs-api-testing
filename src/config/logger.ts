@@ -4,19 +4,20 @@ import { createLogger, format, transports } from 'winston';
 
 const logDir = join(__dirname, '../../logs');
 const isDevEnv = process.env.NODE_ENV === 'develop';
+const isTestEnv = process.env.NODE_ENV === 'test';
 
 // Create the log directory if it does not exist
 if (!existsSync(logDir)) {
 	mkdirSync(logDir);
 }
 const debugLog = join(logDir, 'debug.log');
+const testsLog = join(logDir, 'tests.log');
 const errorsLog = join(logDir, 'errors.log');
 const exceptionsLog = join(logDir, 'exceptions.log');
 const rejectionsLog = join(logDir, 'rejections.log');
 
 const Logger = createLogger({
-	format: format.simple(),
-	silent: process.env.NODE_ENV === 'test'
+	format: format.simple()
 });
 
 if (isDevEnv) {
@@ -37,18 +38,10 @@ if (isDevEnv) {
 			)
 		})
 	);
-
-	/*
-  logger.exceptions.handle(
-    new transports.Console({
-      format: format.simple(),
-    })
-  );
-  */
 } else {
 	Logger.add(
 		new transports.File({
-			filename: errorsLog,
+			filename: isTestEnv ? testsLog : errorsLog,
 			level: 'error',
 			format: format.json()
 		})
@@ -56,14 +49,14 @@ if (isDevEnv) {
 
 	Logger.exceptions.handle(
 		new transports.File({
-			filename: exceptionsLog,
+			filename: isTestEnv ? testsLog : exceptionsLog,
 			format: format.json()
 		})
 	);
 
 	Logger.rejections.handle(
 		new transports.File({
-			filename: rejectionsLog,
+			filename: isTestEnv ? testsLog : rejectionsLog,
 			format: format.json()
 		})
 	);

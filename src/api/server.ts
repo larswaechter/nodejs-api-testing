@@ -29,7 +29,7 @@ export class Server {
 
 	private registerErrorHandler() {
 		this._app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
-			Logger.error(err);
+			Logger.error(err.stack || err);
 			return res.status(500).json(err.message || err);
 		});
 	}

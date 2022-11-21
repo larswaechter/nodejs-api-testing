@@ -15,6 +15,7 @@ export abstract class AbsTestFactory implements ITestFactory {
 
 	constructor() {
 		// Overwrite .env file entry
+		process.env.NODE_PORT = '0'; // Choose the first randomly available port
 		process.env.PGDATABASE = 'nodejs_test';
 	}
 

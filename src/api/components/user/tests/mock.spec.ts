@@ -12,26 +12,22 @@ const dummyUser: IUser = {
 
 const mockReadAll = jest.fn().mockReturnValue([dummyUser]);
 const mockReadByID = jest.fn().mockReturnValue(dummyUser);
+const mockDelete = jest.fn().mockReturnValue(1);
 
-jest.mock('../repository', () => {
-	return {
-		UserRepository: jest.fn().mockImplementation(() => {
-			return {
-				readAll: mockReadAll,
-				readByID: mockReadByID
-			};
-		})
-	};
-});
+jest.mock('../repository', () => ({
+	UserRepository: jest.fn().mockImplementation(() => ({
+		readAll: mockReadAll,
+		readByID: mockReadByID,
+		delete: mockDelete
+	}))
+}));
 
 describe('User component (MOCK)', () => {
 	const factory: MockTestFactory = new MockTestFactory();
 
 	// Start Express Server
 	beforeAll((done) => {
-		factory.prepare((err?: Error) => {
-			done(err);
-		});
+		factory.prepare(done);
 	});
 
 	// Stop Express Server
@@ -79,6 +75,20 @@ describe('User component (MOCK)', () => {
 				cExpect(user.username).eq(dummyUser.username);
 
 				expect(mockReadByID).toHaveBeenCalledTimes(1);
+
+				done();
+			})
+			.catch((err) => {
+				done(err);
+			});
+	});
+
+	it('DELETE /users/1', (done) => {
+		factory.app
+			.delete('/users/1')
+			.expect(204)
+			.then(() => {
+				expect(mockDelete).toHaveBeenCalledTimes(1);
 
 				done();
 			})
