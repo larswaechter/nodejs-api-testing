@@ -3,11 +3,10 @@ import { Router } from 'express';
 import { UserController } from './controller';
 
 export class UserRoutes {
-	private readonly controller: UserController;
+	private readonly controller: UserController = new UserController();
 	readonly router: Router = Router();
 
 	constructor() {
-		this.controller = new UserController();
 		this.initRoutes();
 	}
 

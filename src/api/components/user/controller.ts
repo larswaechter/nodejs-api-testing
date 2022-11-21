@@ -5,11 +5,7 @@ import { UserDTO } from './dto';
 import { UserRepository } from './repository';
 
 export class UserController {
-	private readonly repo: UserRepository;
-
-	constructor() {
-		this.repo = new UserRepository();
-	}
+	private readonly repo: UserRepository = new UserRepository();
 
 	@bind
 	async readUsers(req: Request, res: Response, next: NextFunction) {
