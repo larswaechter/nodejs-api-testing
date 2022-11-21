@@ -10,9 +10,9 @@ const dummyUser: IUser = {
 	created_at: new Date()
 };
 
-const mockReadAll = jest.fn().mockReturnValue([dummyUser]);
-const mockReadByID = jest.fn().mockReturnValue(dummyUser);
-const mockDelete = jest.fn().mockReturnValue(1);
+const mockReadAll = jest.fn().mockResolvedValue([dummyUser]);
+const mockReadByID = jest.fn().mockResolvedValue(dummyUser);
+const mockDelete = jest.fn().mockResolvedValue(true);
 
 jest.mock('../repository', () => ({
 	UserRepository: jest.fn().mockImplementation(() => ({
