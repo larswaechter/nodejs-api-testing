@@ -6,14 +6,12 @@ import { UserDTO } from '../dto';
 
 describe('User component (REPO)', () => {
 	const factory: RepoTestFactory = new RepoTestFactory();
-	let repo: UserRepository;
-
+	const repo: UserRepository = new UserRepository();
 	const dummyUser = new UserDTO('john@doe.com', 'johndoe');
 
 	// Connect to DB
 	beforeAll((done) => {
 		factory.prepare((err?: Error) => {
-			repo = new UserRepository();
 			done(err);
 		});
 	});
