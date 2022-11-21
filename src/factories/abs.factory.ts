@@ -1,10 +1,7 @@
-import { config } from 'dotenv';
 import { join } from 'path';
-
-config();
-
 import { readFileSync } from 'fs';
-import { Client } from 'pg';
+
+import { client } from '../config/db';
 
 export interface ITestFactory {
 	close(cb: (err?: Error) => void): void;
@@ -12,8 +9,6 @@ export interface ITestFactory {
 }
 
 export abstract class AbsTestFactory implements ITestFactory {
-	readonly dbClient: Client = new Client();
-
 	private seed = readFileSync(join(__dirname, '../../db/scripts/create-tables.sql'), {
 		encoding: 'utf-8'
 	});
@@ -26,11 +21,15 @@ export abstract class AbsTestFactory implements ITestFactory {
 	abstract close(cb: (err?: Error) => void): void;
 	abstract prepare(cb: (err?: Error) => void): void;
 
-	protected connectDatabase(cb: (err?: Error) => void) {
-		this.dbClient
+	protected disconnectDB(cb: (err?: Error) => void) {
+		client.end(cb);
+	}
+
+	protected connectDB(cb: (err?: Error) => void) {
+		client
 			.connect()
 			.then(() => {
-				this.dbClient.query(this.seed, (err) => {
+				client.query(this.seed, (err) => {
 					if (err) return cb(err);
 					cb();
 				});

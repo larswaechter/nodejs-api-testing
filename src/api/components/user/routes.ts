@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { Client } from 'pg';
 
 import { UserController } from './controller';
 
@@ -7,8 +6,8 @@ export class UserRoutes {
 	private readonly controller: UserController;
 	readonly router: Router = Router();
 
-	constructor(client: Client) {
-		this.controller = new UserController(client);
+	constructor() {
+		this.controller = new UserController();
 		this.initRoutes();
 	}
 

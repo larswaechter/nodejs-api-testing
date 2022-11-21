@@ -7,10 +7,8 @@ import { UserRoutes } from './components/user/routes';
 
 export class Server {
 	private readonly _app: express.Application = express();
-	client: Client;
 
-	constructor(client: Client) {
-		this.client = client;
+	constructor() {
 		this.registerMiddleware();
 		this.registerRoutes();
 		this.registerErrorHandler();
@@ -26,7 +24,7 @@ export class Server {
 
 	private registerRoutes() {
 		this._app.get('/', (req: Request, res: Response) => res.send('Hello World!'));
-		this._app.use('/users', new UserRoutes(this.client).router);
+		this._app.use('/users', new UserRoutes().router);
 	}
 
 	private registerErrorHandler() {

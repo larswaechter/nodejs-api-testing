@@ -13,7 +13,7 @@ describe('User component (REPO)', () => {
 	// Connect to DB
 	beforeAll((done) => {
 		factory.prepare((err?: Error) => {
-			repo = new UserRepository(factory.dbClient);
+			repo = new UserRepository();
 			done(err);
 		});
 	});

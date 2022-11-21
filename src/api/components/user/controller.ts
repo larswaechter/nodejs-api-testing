@@ -1,15 +1,14 @@
 import { bind } from 'decko';
 import { NextFunction, Request, Response } from 'express';
-import { Client } from 'pg';
-import { UserDTO } from './dto';
 
+import { UserDTO } from './dto';
 import { UserRepository } from './repository';
 
 export class UserController {
 	private readonly repo: UserRepository;
 
-	constructor(client: Client) {
-		this.repo = new UserRepository(client);
+	constructor() {
+		this.repo = new UserRepository();
 	}
 
 	@bind

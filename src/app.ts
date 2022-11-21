@@ -11,7 +11,7 @@ import Logger from './config/logger';
 client
 	.connect()
 	.then(() => {
-		const app: express.Application = new Server(client).app;
+		const app: express.Application = new Server().app;
 		const server: HttpServer = createServer(app);
 
 		// Start express server

@@ -6,13 +6,10 @@ export class RepoTestFactory extends AbsTestFactory {
 	}
 
 	close(cb: (err?: Error) => void) {
-		this.dbClient.end((err) => {
-			if (err) return cb(err);
-			cb();
-		});
+		this.disconnectDB(cb);
 	}
 
 	prepare(cb: (err?: Error) => void) {
-		this.connectDatabase(cb);
+		this.connectDB(cb);
 	}
 }

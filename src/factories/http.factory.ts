@@ -3,6 +3,7 @@ import { createServer, Server as HttpServer } from 'http';
 
 import { Server } from '../api/server';
 import { AbsTestFactory } from './abs.factory';
+import { client } from '../config/db';
 
 export class HttpTestFactory extends AbsTestFactory {
 	private readonly server: Server;
@@ -10,7 +11,7 @@ export class HttpTestFactory extends AbsTestFactory {
 
 	constructor() {
 		super();
-		this.server = new Server(this.dbClient);
+		this.server = new Server();
 		this.http = createServer(this.server.app);
 	}
 
@@ -19,7 +20,7 @@ export class HttpTestFactory extends AbsTestFactory {
 	}
 
 	close(cb: (err?: Error) => void) {
-		this.dbClient.end((err) => {
+		this.disconnectDB((err) => {
 			if (err) return cb(err);
 			this.http.close((err) => {
 				cb(err);
@@ -28,7 +29,7 @@ export class HttpTestFactory extends AbsTestFactory {
 	}
 
 	prepare(cb: (err?: Error) => void) {
-		this.connectDatabase((err) => {
+		this.connectDB((err) => {
 			if (err) return cb(err);
 			this.http.listen(process.env.NODE_PORT, cb);
 		});
