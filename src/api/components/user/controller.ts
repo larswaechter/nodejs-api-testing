@@ -28,7 +28,7 @@ export class UserController {
 			if (isNaN(+id)) return res.sendStatus(400);
 
 			const user = await this.repo.readByID(+id);
-			if (!user) res.sendStatus(404);
+			if (!user) return res.sendStatus(404);
 
 			return res.json(user);
 		} catch (err) {
@@ -60,7 +60,7 @@ export class UserController {
 			if (isNaN(+id)) return res.sendStatus(400);
 
 			const user = await this.repo.readByID(+id);
-			if (!user) res.sendStatus(404);
+			if (!user) return res.sendStatus(404);
 
 			await this.repo.delete(+id);
 
