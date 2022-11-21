@@ -2,7 +2,9 @@
 
 [![CI/CD](https://github.com/larswaechter/nodejs-api-testing/actions/workflows/actions.yml/badge.svg)](https://github.com/larswaechter/nodejs-api-testing/actions/workflows/actions.yml)
 
-This repository is an example app on testing Node.js REST-APIs with Jest, Supertest & Chai.
+This repository is an example app on testing Node.js REST-APIs with Jest, Supertest & Chai that depend on an external database. There are two testing strategies covered. On the one hand we run the tests against a test database. On the other hand we run the tests without any database using a mocked data layer.
+
+You can find a detailed explanation about the application's testing strategy and architecture on my [blog](https://larswaechter.dev/blog/nodejs-api-testing/).
 
 ## Technology
 
@@ -41,8 +43,20 @@ The app is available at [http://localhost:3000](http://localhost:3000).
 
 ## Testing
 
-Make sure you have a Postgres instance running before running the tests.
+You can run the tests using a database or not. Errors that occur during the tests are logged to `/logs/tests.log`
+
+### Database
+
+Make sure to have a Postgres instance running before executing the tests.
 
 ```bash
-npm test
+npm run test:db
+```
+
+### Mock
+
+In this case the database layer is mocked.
+
+```bash
+npm run test:mock
 ```
