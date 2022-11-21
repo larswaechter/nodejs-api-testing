@@ -13,8 +13,8 @@
 		"prettier:ci": "prettier --config ./.prettierrc --check './src/**/*.ts'",
 		"lint": "eslint . --ext .ts",
 		"test": "npm run test:db -- --coverage",
-		"test:mock": "NODE_ENV=test jest --detectOpenHandles --testPathIgnorePatterns \"(repo|http).spec.ts\"",
-		"test:db": "NODE_ENV=test jest --detectOpenHandles --testPathIgnorePatterns mock.spec.ts"
+		"test:db": "jest --detectOpenHandles --testPathIgnorePatterns mock.spec.ts",
+		"test:mock": "jest --detectOpenHandles --testPathIgnorePatterns \"(repo|http).spec.ts\""
 	},
 	"repository": {
 		"type": "git",

@@ -13,12 +13,6 @@ export abstract class AbsTestFactory implements ITestFactory {
 		encoding: 'utf-8'
 	});
 
-	constructor() {
-		// Overwrite .env file entry
-		process.env.NODE_PORT = '0'; // Choose the first randomly available port
-		process.env.PGDATABASE = 'nodejs_test';
-	}
-
 	abstract close(cb: (err?: Error) => void): void;
 	abstract prepare(cb: (err?: Error) => void): void;
 
@@ -30,13 +24,8 @@ export abstract class AbsTestFactory implements ITestFactory {
 		client
 			.connect()
 			.then(() => {
-				client.query(this.seed, (err) => {
-					if (err) return cb(err);
-					cb();
-				});
+				client.query(this.seed, cb);
 			})
-			.catch((err) => {
-				return cb(err);
-			});
+			.catch(cb);
 	}
 }

@@ -6,4 +6,5 @@ node_modules/
 .editorconfig
 .github
 .env
-.example.env
+.env.test
+.env.example

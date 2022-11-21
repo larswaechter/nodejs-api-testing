@@ -21,9 +21,7 @@ export class HttpTestFactory extends AbsTestFactory {
 	close(cb: (err?: Error) => void) {
 		this.http.close((err) => {
 			if (err) return cb(err);
-			this.disconnectDB((err) => {
-				cb(err);
-			});
+			this.disconnectDB(cb);
 		});
 	}
 

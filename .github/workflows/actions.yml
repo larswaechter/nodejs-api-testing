@@ -43,16 +43,6 @@ jobs:
           path: ~/.npm
           key: ${{ runner.os }}-modules-be-${{ hashFiles('package-lock.json') }}
 
-      - name: Create env file
-        run: |
-          touch .env
-          echo PGHOST=localhost >> ./.env
-          echo PGUSER=root >> ./.env
-          echo PGPASSWORD=mypassword >> ./.env
-          echo PGDATABASE=nodejs_test >> ./.env
-          echo PGPORT=5432 >> ./.env
-          cat .env
-
       - name: Install dependencies
         run: npm ci
       - name: Build
