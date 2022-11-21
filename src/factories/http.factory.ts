@@ -3,7 +3,6 @@ import { createServer, Server as HttpServer } from 'http';
 
 import { Server } from '../api/server';
 import { AbsTestFactory } from './abs.factory';
-import { client } from '../config/db';
 
 export class HttpTestFactory extends AbsTestFactory {
 	private readonly server: Server;
@@ -20,9 +19,9 @@ export class HttpTestFactory extends AbsTestFactory {
 	}
 
 	close(cb: (err?: Error) => void) {
-		this.disconnectDB((err) => {
+		this.http.close((err) => {
 			if (err) return cb(err);
-			this.http.close((err) => {
+			this.disconnectDB((err) => {
 				cb(err);
 			});
 		});
