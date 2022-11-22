@@ -8,12 +8,12 @@ You can find a detailed explanation about the application's testing strategy and
 
 ## Technology
 
-- Language: [typescript](https://www.npmjs.com/package/typescript)
-- Server: [express](https://www.npmjs.com/package/express)
-- Database: [postgres](https://www.npmjs.com/package/pg)
-- Testing: [jest](https://www.npmjs.com/package/jest) & [supertest](https://www.npmjs.com/package/supertest) & [chai](https://www.npmjs.com/package/chai)
-- CI/CD: GitHub Actions
-- Containerization: Docker
+- Language: [Typescript](https://www.npmjs.com/package/typescript)
+- Server: [Express](https://www.npmjs.com/package/express)
+- Database: [Postgres](https://www.npmjs.com/package/pg)
+- Testing: [Jest](https://www.npmjs.com/package/jest) & [Supertest](https://www.npmjs.com/package/supertest) & [Chai](https://www.npmjs.com/package/chai)
+- CI/CD: [GitHub Actions](https://github.com/features/actions)
+- Containerization: [Docker](https://www.docker.com/)
 
 ## Setup
 
@@ -34,14 +34,14 @@ Enter the following commands to start the app:
 ```bash
 npm i
 
-mv example.env .env	# Enter credentials here
+mv .env.example .env	# Enter credentials here
 
 npm run watch
 ```
 
 The app is available at [http://localhost:3000](http://localhost:3000).
 
-> Tip: When running the app natively you can still use the Postgres instance from Docker.
+> Tip: When running the app natively you can still use the Postgres Docker container.
 
 ## Testing
 
