@@ -7,19 +7,22 @@ describe('User component (HTTP)', () => {
 	const factory: HttpTestFactory = new HttpTestFactory();
 	const dummyUser = new UserDTO('john@doe.com', 'johndoe');
 
-	// Connect to DB && start Express Server
-	beforeAll((done) => {
-		factory.prepare((err?: Error) => {
-			done(err);
-		});
+	// Connect to pool && start Express Server
+	beforeEach((done) => {
+		factory.prepareEach(done);
 	});
 
-	// Disconnect from DB && stop Express Server
+	// Release pool client && stop Express Server
+	afterEach((done) => {
+		factory.closeEach(done);
+	});
+
+	// End pool
 	afterAll((done) => {
-		factory.close(done);
+		factory.closeAll(done);
 	});
 
-	it('GET /users', (done) => {
+	test('get empty users', (done) => {
 		factory.app
 			.get('/users')
 			.expect(200)
@@ -37,7 +40,7 @@ describe('User component (HTTP)', () => {
 			});
 	});
 
-	it('GET /users/1', (done) => {
+	test('get 404', (done) => {
 		factory.app
 			.get('/users/1')
 			.expect(404)
@@ -49,7 +52,7 @@ describe('User component (HTTP)', () => {
 			});
 	});
 
-	it('DELETE /users/1', (done) => {
+	test('get 404', (done) => {
 		factory.app
 			.delete('/users/1')
 			.expect(404)
@@ -61,93 +64,38 @@ describe('User component (HTTP)', () => {
 			});
 	});
 
-	it('POST /users', (done) => {
-		factory.app
-			.post('/users')
-			.send(dummyUser)
-			.expect(201)
-			.expect('Content-Type', /json/)
-			.then((res) => {
-				const user: IUser = res.body;
+	test('create, read & delete user', async () => {
+		const postRes = await factory.app.post('/users').send(dummyUser).expect(201).expect('Content-Type', /json/);
 
-				expect(user).to.be.an('object');
-				expect(user.id).eq(1);
-				expect(user.email).eq(dummyUser.email);
-				expect(user.username).eq(dummyUser.username);
+		const postResUser: IUser = postRes.body;
+		expect(postResUser).to.be.an('object');
+		expect(postResUser.id).eq(1);
+		expect(postResUser.email).eq(dummyUser.email);
+		expect(postResUser.username).eq(dummyUser.username);
 
-				done();
-			})
-			.catch((err) => {
-				done(err);
-			});
-	});
+		await factory.app.post('/users').send(dummyUser).expect(400);
 
-	it('POST /users', (done) => {
-		factory.app
-			.post('/users')
-			.send(dummyUser)
-			.expect(400)
-			.then(() => {
-				done();
-			})
-			.catch((err) => {
-				done(err);
-			});
-	});
+		const getRes = await factory.app.get('/users').expect(200).expect('Content-Type', /json/);
 
-	it('GET /users', (done) => {
-		factory.app
-			.get('/users')
-			.expect(200)
-			.expect('Content-Type', /json/)
-			.then((res) => {
-				const users: IUser[] = res.body;
+		const getResUsers: IUser[] = getRes.body;
+		expect(getResUsers).to.be.an('array');
+		expect(getResUsers.length).eq(1);
 
-				expect(users).to.be.an('array');
-				expect(users.length).eq(1);
+		const getResUser = getResUsers[0];
+		expect(getResUser).to.be.an('object');
+		expect(getResUser.id).eq(1);
+		expect(getResUser.email).eq(dummyUser.email);
+		expect(getResUser.username).eq(dummyUser.username);
 
-				const user = users[0];
-				expect(user).to.be.an('object');
-				expect(user.id).eq(1);
-				expect(user.email).eq(dummyUser.email);
-				expect(user.username).eq(dummyUser.username);
+		const getRes2 = await factory.app.get('/users/1').expect(200).expect('Content-Type', /json/);
 
-				done();
-			})
-			.catch((err) => {
-				done(err);
-			});
-	});
+		const getRes2User: IUser = getRes2.body;
+		expect(getRes2User).to.be.an('object');
+		expect(getRes2User.id).eq(1);
+		expect(getRes2User.email).eq(dummyUser.email);
+		expect(getRes2User.username).eq(dummyUser.username);
 
-	it('GET /users/1', (done) => {
-		factory.app
-			.get('/users/1')
-			.expect(200)
-			.expect('Content-Type', /json/)
-			.then((res) => {
-				const user: IUser = res.body;
-
-				expect(user).to.be.an('object');
-				expect(user.id).eq(1);
-				expect(user.email).eq(dummyUser.email);
-				expect(user.username).eq(dummyUser.username);
-
-				done();
-			})
-			.catch((err) => {
-				done(err);
-			});
-	});
-
-	it('DELETE /users/1', (done) => {
-		factory.app
-			.delete('/users/1')
-			.expect(204)
-			.then(() => {
-				done();
-			})
-			.catch((err) => {
-				done(err);
-			});
+		await factory.app.delete('/users/1').expect(204);
+		await factory.app.get('/users/1').expect(404);
 	});
 });

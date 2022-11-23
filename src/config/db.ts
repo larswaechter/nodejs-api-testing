@@ -1,6 +1,6 @@
-import { Client } from 'pg';
+import { Pool } from 'pg';
 
 // Config is read from .env file
-const client = new Client();
+const pool = new Pool();
 
-export { client };
+export { pool };

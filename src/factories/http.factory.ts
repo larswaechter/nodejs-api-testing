@@ -12,17 +12,21 @@ export class HttpTestFactory extends AbsTestFactory {
 		return supertest(this.server.app);
 	}
 
-	close(cb: (err?: Error) => void) {
-		this.http.close((err) => {
-			if (err) return cb(err);
-			this.disconnectDB(cb);
-		});
-	}
-
-	prepare(cb: (err?: Error) => void) {
-		this.connectDB((err) => {
+	prepareEach(cb: (err?: Error) => void) {
+		this.connectPool((err) => {
 			if (err) return cb(err);
 			this.http.listen(process.env.NODE_PORT, cb);
 		});
+	}
+
+	closeEach(cb: (err?: Error) => void) {
+		this.http.close((err) => {
+			this.releasePoolClient();
+			cb(err);
+		});
+	}
+
+	closeAll(cb: (err?: Error) => void) {
+		this.endPool(cb);
 	}
 }

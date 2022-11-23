@@ -1,31 +1,39 @@
 import { join } from 'path';
+import { PoolClient } from 'pg';
 import { readFileSync } from 'fs';
 
-import { client } from '../config/db';
+import { pool } from '../config/db';
 
 export interface ITestFactory {
-	close(cb: (err?: Error) => void): void;
-	prepare(cb: (err?: Error) => void): void;
+	prepareEach(cb: (err?: Error) => void): void;
+	closeEach(cb: (err?: Error) => void): void;
 }
 
 export abstract class AbsTestFactory implements ITestFactory {
+	private poolClient: PoolClient;
+
 	private seed = readFileSync(join(__dirname, '../../db/scripts/create-tables.sql'), {
 		encoding: 'utf-8'
 	});
 
-	abstract close(cb: (err?: Error) => void): void;
-	abstract prepare(cb: (err?: Error) => void): void;
+	abstract prepareEach(cb: (err?: Error) => void): void;
+	abstract closeEach(cb: (err?: Error) => void): void;
 
-	protected disconnectDB(cb: (err?: Error) => void) {
-		client.end(cb);
-	}
-
-	protected connectDB(cb: (err?: Error) => void) {
-		client
+	protected connectPool(cb: (err?: Error) => void) {
+		pool
 			.connect()
-			.then(() => {
-				client.query(this.seed, cb);
+			.then((poolClient) => {
+				this.poolClient = poolClient;
+				this.poolClient.query(this.seed, cb);
 			})
 			.catch(cb);
+	}
+
+	protected releasePoolClient() {
+		this.poolClient.release(true);
+	}
+
+	protected endPool(cb: (err?: Error) => void) {
+		pool.end(cb);
 	}
 }

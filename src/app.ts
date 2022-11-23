@@ -5,10 +5,10 @@ import { config } from 'dotenv';
 config();
 
 import { Server } from './api/server';
-import { client } from './config/db';
+import { pool } from './config/db';
 import Logger from './config/logger';
 
-client
+pool
 	.connect()
 	.then(() => {
 		const app: express.Application = new Server().app;

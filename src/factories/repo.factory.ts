@@ -1,11 +1,15 @@
 import { AbsTestFactory } from './abs.factory';
 
 export class RepoTestFactory extends AbsTestFactory {
-	close(cb: (err?: Error) => void) {
-		this.disconnectDB(cb);
+	prepareEach(cb: (err?: Error) => void) {
+		this.connectPool(cb);
 	}
 
-	prepare(cb: (err?: Error) => void) {
-		this.connectDB(cb);
+	closeEach() {
+		this.releasePoolClient();
+	}
+
+	closeAll(cb: (err?: Error) => void) {
+		this.endPool(cb);
 	}
 }
