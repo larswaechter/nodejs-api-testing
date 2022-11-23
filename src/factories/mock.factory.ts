@@ -12,11 +12,11 @@ export class MockTestFactory extends AbsTestFactory {
 		return supertest(this.server.app);
 	}
 
-	close(cb: (err?: Error) => void) {
-		this.http.close(cb);
+	prepareEach(cb: (err?: Error) => void) {
+		this.http.listen(process.env.NODE_PORT, cb);
 	}
 
-	prepare(cb: (err?: Error) => void) {
-		this.http.listen(process.env.NODE_PORT, cb);
+	closeEach(cb: (err?: Error) => void) {
+		this.http.close(cb);
 	}
 }

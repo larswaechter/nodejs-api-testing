@@ -26,74 +26,42 @@ describe('User component (MOCK)', () => {
 	const factory: MockTestFactory = new MockTestFactory();
 
 	// Start Express Server
-	beforeAll((done) => {
-		factory.prepare(done);
+	beforeEach((done) => {
+		factory.prepareEach(done);
 	});
 
 	// Stop Express Server
-	afterAll((done) => {
-		factory.close(done);
+	afterEach((done) => {
+		factory.closeEach(done);
 	});
 
-	it('GET /users', (done) => {
-		factory.app
-			.get('/users')
-			.expect(200)
-			.expect('Content-Type', /json/)
-			.then((res) => {
-				const users: IUser[] = res.body;
+	test('create, read & delete user', async () => {
+		const getRes = await factory.app.get('/users').expect(200).expect('Content-Type', /json/);
 
-				cExpect(users).to.be.an('array');
-				cExpect(users.length).eq(1);
+		const getResUsers: IUser[] = getRes.body;
+		cExpect(getResUsers).to.be.an('array');
+		cExpect(getResUsers.length).eq(1);
 
-				const user = users[0];
-				cExpect(user).to.be.an('object');
-				cExpect(user.id).eq(dummyUser.id);
-				cExpect(user.email).eq(dummyUser.email);
-				cExpect(user.username).eq(dummyUser.username);
+		const getResUser = getResUsers[0];
+		cExpect(getResUser).to.be.an('object');
+		cExpect(getResUser.id).eq(dummyUser.id);
+		cExpect(getResUser.email).eq(dummyUser.email);
+		cExpect(getResUser.username).eq(dummyUser.username);
 
-				expect(mockReadAll).toHaveBeenCalledTimes(1);
+		expect(mockReadAll).toHaveBeenCalledTimes(1);
 
-				done();
-			})
-			.catch((err) => {
-				done(err);
-			});
-	});
+		const getRes2 = await factory.app.get('/users/1').expect(200).expect('Content-Type', /json/);
 
-	it('GET /users/1', (done) => {
-		factory.app
-			.get('/users/1')
-			.expect(200)
-			.expect('Content-Type', /json/)
-			.then((res) => {
-				const user: IUser = res.body;
+		const getResUser2: IUser = getRes2.body;
+		cExpect(getResUser2).to.be.an('object');
+		cExpect(getResUser2.id).eq(dummyUser.id);
+		cExpect(getResUser2.email).eq(dummyUser.email);
+		cExpect(getResUser2.username).eq(dummyUser.username);
 
-				cExpect(user).to.be.an('object');
-				cExpect(user.id).eq(dummyUser.id);
-				cExpect(user.email).eq(dummyUser.email);
-				cExpect(user.username).eq(dummyUser.username);
+		expect(mockReadByID).toHaveBeenCalledTimes(1);
 
-				expect(mockReadByID).toHaveBeenCalledTimes(1);
+		await factory.app.delete('/users/1').expect(204);
 
-				done();
-			})
-			.catch((err) => {
-				done(err);
-			});
-	});
-
-	it('DELETE /users/1', (done) => {
-		factory.app
-			.delete('/users/1')
-			.expect(204)
-			.then(() => {
-				expect(mockDelete).toHaveBeenCalledTimes(1);
-
-				done();
-			})
-			.catch((err) => {
-				done(err);
-			});
+		expect(mockDelete).toHaveBeenCalledTimes(1);
 	});
 });
