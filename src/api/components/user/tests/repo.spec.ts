@@ -1,12 +1,14 @@
 import { expect } from 'chai';
 
+import { userDTOFactory, userFactory } from '../../../../factories/helper';
 import { RepoTestFactory } from '../../../../factories/repo.factory';
+import { IUser, UserDTO } from '../dto';
 import { UserRepository } from '../repository';
-import { UserDTO } from '../dto';
 
 describe('User component (REPO)', () => {
 	const factory: RepoTestFactory = new RepoTestFactory();
-	const dummyUser = new UserDTO('john@doe.com', 'johndoe');
+	const dummyUser: IUser = userFactory.build();
+	const dummyUserDTO: UserDTO = userDTOFactory.build();
 
 	// Connect to pool
 	beforeEach((done) => {
@@ -31,66 +33,104 @@ describe('User component (REPO)', () => {
 		});
 	});
 
-	test('read empty user', () => {
+	test('read empty user by id', () => {
 		const repo = new UserRepository();
 		repo.readByID(1).then((users) => {
 			expect(users).to.be.undefined;
 		});
 	});
 
-	test('delete non existing user', () => {
+	test('read empty user by email', () => {
+		const repo = new UserRepository();
+		repo.readByEmailOrUsername(dummyUser.email, '').then((users) => {
+			expect(users).to.be.undefined;
+		});
+	});
+
+	test('read empty user by username', () => {
+		const repo = new UserRepository();
+		repo.readByEmailOrUsername('', dummyUser.username).then((users) => {
+			expect(users).to.be.undefined;
+		});
+	});
+
+	test('delete empty user', () => {
 		const repo = new UserRepository();
 		repo.delete(1).then((res) => {
 			expect(res).to.be.false;
 		});
 	});
 
-	test('create, read & delete user', async () => {
+	test('create new user', async () => {
+		const repo = new UserRepository();
+		const user = await repo.create(dummyUserDTO);
+
+		expect(user).to.be.an('object');
+		expect(user.id).eq(1);
+		expect(user.email).eq(dummyUser.email);
+		expect(user.username).eq(dummyUser.username);
+
+		const count = await factory.getTableRowCount('users');
+		expect(count).eq(1);
+	});
+
+	test('read all users', async () => {
+		const newUser = await userFactory.create();
 		const repo = new UserRepository();
 
-		// create
-		const createRes = await repo.create(dummyUser);
+		const users = await repo.readAll();
+		expect(users).to.be.an('array');
+		expect(users).lengthOf(1);
 
-		expect(createRes).to.be.an('object');
-		expect(createRes.id).eq(1);
-		expect(createRes.email).eq(dummyUser.email);
-		expect(createRes.username).eq(dummyUser.username);
+		const [user] = users;
+		expect(user).to.be.an('object');
+		expect(user.id).eq(newUser.id);
+		expect(user.email).eq(newUser.email);
+		expect(user.username).eq(newUser.username);
+	});
 
-		// readAll
-		const readAllRes = await repo.readAll();
-		expect(readAllRes).to.be.an('array');
-		expect(readAllRes).lengthOf(1);
-		expect(readAllRes[0]).to.be.an('object');
-		expect(readAllRes[0].id).eq(1);
-		expect(readAllRes[0].email).eq(dummyUser.email);
-		expect(readAllRes[0].username).eq(dummyUser.username);
+	test('read user by id', async () => {
+		const newUser = await userFactory.create();
+		const repo = new UserRepository();
 
-		// readByID
-		const readByIDRes = await repo.readByID(1);
-		expect(readByIDRes).to.be.an('object');
-		expect(readByIDRes.id).eq(1);
-		expect(readByIDRes.email).eq(dummyUser.email);
-		expect(readByIDRes.username).eq(dummyUser.username);
+		const user = await repo.readByID(1);
+		expect(user).to.be.an('object');
+		expect(user.id).eq(newUser.id);
+		expect(user.email).eq(newUser.email);
+		expect(user.username).eq(newUser.username);
+	});
 
-		// readByEmailOrUsername
-		const readByEmailOrUsernameRes1 = await repo.readByEmailOrUsername('john@doe.com', '');
-		expect(readByEmailOrUsernameRes1).to.be.an('object');
-		expect(readByEmailOrUsernameRes1.id).eq(1);
-		expect(readByEmailOrUsernameRes1.email).eq(dummyUser.email);
-		expect(readByEmailOrUsernameRes1.username).eq(dummyUser.username);
+	test('read user by email', async () => {
+		const newUser = await userFactory.create();
+		const repo = new UserRepository();
 
-		const readByEmailOrUsernameRes2 = await repo.readByEmailOrUsername('', 'johndoe');
-		expect(readByEmailOrUsernameRes2).to.be.an('object');
-		expect(readByEmailOrUsernameRes2.id).eq(1);
-		expect(readByEmailOrUsernameRes2.email).eq(dummyUser.email);
-		expect(readByEmailOrUsernameRes2.username).eq(dummyUser.username);
+		const user = await repo.readByEmailOrUsername(newUser.email, '');
+		expect(user).to.be.an('object');
+		expect(user.id).eq(newUser.id);
+		expect(user.email).eq(newUser.email);
+		expect(user.username).eq(newUser.username);
+	});
 
-		// delete
-		const deleteRes = await repo.delete(1);
-		expect(deleteRes).to.be.true;
+	test('read user by username', async () => {
+		const newUser = await userFactory.create();
+		const repo = new UserRepository();
 
-		// readByID
-		const readByIDRes2 = await repo.readByID(1);
-		expect(readByIDRes2).to.be.undefined;
+		const user = await repo.readByEmailOrUsername('', newUser.username);
+		expect(user).to.be.an('object');
+		expect(user.id).eq(1);
+		expect(user.email).eq(newUser.email);
+		expect(user.username).eq(newUser.username);
+	});
+
+	test('delete user', async () => {
+		const newUser = await userFactory.create();
+
+		const repo = new UserRepository();
+		const deleted = await repo.delete(newUser.id);
+
+		expect(deleted).to.be.true;
+
+		const count = await factory.getTableRowCount('users');
+		expect(count).eq(0);
 	});
 });
